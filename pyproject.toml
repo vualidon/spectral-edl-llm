@@ -7,7 +7,7 @@ name = "skedl"
 version = "0.1.0"
 description = "Spectral-Kernel EDL confidence estimation for chain-of-thought"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dependencies = [
   "numpy>=1.26",
   "scipy>=1.11",
