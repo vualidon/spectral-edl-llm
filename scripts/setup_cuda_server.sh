@@ -10,7 +10,22 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-PYTHON_BIN="${PYTHON_BIN:-python3.11}"
+# Allow override, otherwise auto-detect a usable Python interpreter.
+PYTHON_BIN="${PYTHON_BIN:-}"
+if [[ -z "$PYTHON_BIN" ]]; then
+  for candidate in python3.11 python3.10 python3.9 python3; do
+    if command -v "$candidate" >/dev/null 2>&1; then
+      PYTHON_BIN="$candidate"
+      break
+    fi
+  done
+fi
+if [[ -z "$PYTHON_BIN" ]]; then
+  echo "[setup] ERROR: no Python interpreter found (tried python3.11, 3.10, 3.9, python3)." >&2
+  echo "[setup] Install Python 3.9+ and rerun, or set PYTHON_BIN explicitly." >&2
+  exit 1
+fi
+
 MAIN_VENV="${MAIN_VENV:-.venv}"
 BLEURT_VENV="${BLEURT_VENV:-.venv-bleurt}"
 TORCH_INDEX_URL="${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu121}"
